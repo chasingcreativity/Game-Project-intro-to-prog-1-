@@ -12,6 +12,7 @@ var gameChar_world_x;
 
 var gameScore;
 var flagpole;
+var lives;
 
 var isLeft;
 var isRight;
@@ -30,7 +31,14 @@ function setup()
 {
 	createCanvas(1024, 576);
 	floorPos_y = height * 3/4;
-	gameChar_x = width/2;
+    lives = 1;
+    
+    startGame();
+}
+
+function startGame()
+{
+    gameChar_x = width/2;
 	gameChar_y = floorPos_y;
 
 	// Variable to control the background scrolling.
@@ -181,8 +189,8 @@ function setup()
 }
 
 function draw()
-{
-	background(98,199,209); // fill the sky blue
+{    
+    background(98,199,209); // fill the sky blue
 
 	noStroke();
 	fill(62,80,104);
@@ -224,9 +232,29 @@ function draw()
     
     noStroke;
     fill(255,255,240);
-    text('Score: ' + gameScore, 10, height - 10);
+    textAlign(LEFT, BOTTOM);
+    textSize(12);
+    text('Score: ' + gameScore, 10, height - 30);
+    text('Lives:', 10, height - 15);
+    for(var l = 0; l < 1*lives; l++)
+    {
+        ellipse(50 + 12*[l], height - 22,10,10);
+    }
 
 	drawGameChar();
+        
+    if(flagpole.isReached == true)
+    {
+        noStroke();
+        fill(255,255,240);
+        textAlign(CENTER, CENTER);
+        textSize(24);
+        text('LEVEL COMPLETE', width/2, height - 70);
+        text('[ REFRESH PAGE to play again ]', width/2, height - 50);
+        return;
+    }
+    
+    checkPlayerDie();
 
 	// Logic to make the game character move or the background scroll.
 	if(isLeft)
@@ -304,7 +332,6 @@ function keyReleased()
 }
 
 // Function to draw the game character.
-
 function drawGameChar()
 {
 	// draw game character
@@ -702,4 +729,27 @@ function checkFlagpole()
     {
         flagpole.isReached = true;
     }
+}
+
+function checkPlayerDie()
+{
+    if(gameChar_y > height + 100)
+    {
+        lives -= 1;
+    }
+    
+    if(lives < 1)
+    {
+        noStroke();
+        fill(255,255,240);
+        textAlign(CENTER, CENTER);
+        textSize(24);
+        text('GAME OVER', width/2, height - 70);
+        text('[ REFRESH PAGE to try again ]', width/2, height - 50);
+        return;
+    }
+//    else if()
+//    {
+//        startGame();
+//    }
 }
